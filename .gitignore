@@ -1,0 +1,11 @@
+# Build artifacts
+pipeline
+.cache/
+*.o
+*.a
+
+# Configuration
+compile_commands.json
+
+# Media
+images/
