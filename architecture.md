@@ -15,8 +15,8 @@ graph TD
     end
 
     subgraph "Thread Pool (llmpool.h)"
-        TP[LLMThreadPool]
-        TQ[TaskQueue (Thread-Safe)]
+        TP["LLMThreadPool"]
+        TQ["TaskQueue (Thread-Safe)"]
         W1[Worker Thread 1]
         W2[Worker Thread 2]
         Wn[Worker Thread N]
