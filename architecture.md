@@ -7,9 +7,9 @@ This document describes the high-level architecture and components of the `llmpo
 ```mermaid
 graph TD
     subgraph "Main Thread (pipeline.cpp)"
-        MT[Main Loop]
-        TS[Task Submission]
-        TW[Wait/Get Results]
+        MT["Main Loop"]
+        TS["Task Submission"]
+        TW["Wait/Get Results"]
         MT --> TS
         TW -.-> MT
     end
@@ -17,9 +17,9 @@ graph TD
     subgraph "Thread Pool (llmpool.h)"
         TP["LLMThreadPool"]
         TQ["TaskQueue (Thread-Safe)"]
-        W1[Worker Thread 1]
-        W2[Worker Thread 2]
-        Wn[Worker Thread N]
+        W1["Worker Thread 1"]
+        W2["Worker Thread 2"]
+        Wn["Worker Thread N"]
         
         TS -->|submit| TP
         TP -->|push| TQ
@@ -29,9 +29,9 @@ graph TD
     end
 
     subgraph "External Integration"
-        C[libcpr]
-        O[Ollama API]
-        J[nlohmann/json]
+        C["libcpr"]
+        O["Ollama API"]
+        J["nlohmann/json"]
         
         W1 --> C
         W2 --> C
