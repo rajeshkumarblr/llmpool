@@ -42,10 +42,12 @@ std::string analyze_image_with_ollama(const std::string &image_path) {
   std::string base64_image = base64_encode(image_data);
 
   // Ergonomic JSON construction mapping perfectly to Python dictionaries
-  json payload = {{"model", "qwen3-vl:latest"},
-                  {"prompt", "What is in this image?"},
-                  {"stream", false},
-                  {"images", {base64_image}}};
+  json payload = {
+      {"model", "qwen3-vl:latest"},
+      {"prompt",
+       "What is in this image? Provide your response in exactly 10 lines."},
+      {"stream", false},
+      {"images", {base64_image}}};
 
   // cpr automatically handles the connection, sockets, and memory bounds
   cpr::Response r =
@@ -68,7 +70,7 @@ std::string analyze_image_with_ollama(const std::string &image_path) {
 
 int main() {
   // 1 thread to avoid VRAM exhaustion for Vision Models
-  LLMThreadPool llm_pool(1);
+  LLMThreadPool llm_pool(3);
 
   std::string image_dir = "images";
   if (!fs::exists(image_dir) || !fs::is_directory(image_dir)) {
@@ -104,6 +106,15 @@ int main() {
     // .get() will block the main thread until THIS specific task finishes
     // returning its string.
     std::string result = task.result_future.get();
+
+    // Store the results in a text file for each image
+    std::ofstream out_file(task.path + ".txt");
+    if (out_file.is_open()) {
+      out_file << result;
+      out_file.close();
+      std::cout << "Results saved to: " << task.path << ".txt\n";
+    }
+
     std::cout << "=== Results for '" << task.path << "' ===\n"
               << result << "\n\n";
   }
